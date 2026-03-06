@@ -88,7 +88,7 @@ describe("Aether Profile Contract", () => {
                 user2
             );
 
-            const val = (getResult as any).value.data;
+            const val = (getResult as any).value?.value ?? undefined;
             expect(val.vibes).toStrictEqual(Cl.list(vibes));
             expect(val.amenities).toStrictEqual(Cl.list(amenities));
             expect(Number(val["updated-at"].value)).toBeGreaterThan(0);

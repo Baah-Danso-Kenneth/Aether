@@ -247,10 +247,13 @@
             ;; 1. Booking must be in "confirmed" status
             (asserts! (is-eq current-status "confirmed") ERR-NOT-AUTHORIZED)
 
-            ;; 2. Simplified for Demo: Guest or Host can release payment at any time
+            ;; 2. Only Guest or Host can release payment
             (asserts! (or (is-eq tx-sender guest) (is-eq tx-sender host)) ERR-NOT-AUTHORIZED)
 
-            ;; 3. Must have funds in escrow
+            ;; 3. Only allow release at or after the check-in block
+            (asserts! (>= stacks-block-height check-in-block) ERR-NOT-AUTHORIZED)
+
+            ;; 4. Must have funds in escrow
             (asserts! (> escrowed-amount u0) ERR-INVALID-AMOUNT)
 
             ;; TRANSFER FUNDS
