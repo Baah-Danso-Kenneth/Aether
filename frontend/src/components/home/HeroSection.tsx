@@ -4,13 +4,13 @@ import Image from 'next/image';
 import GlassPanel from '../ui/GlassPanel';
 import Button from '../ui/Button';
 import CustomSelect from '../ui/CustomSelect';
-
+import { useTranslation } from '@/hooks/useTranslation';
+import { LOCATIONS } from '@/constants/locations';
 
 import { useRouter } from 'next/navigation';
-import { LOCATIONS } from '../constants/locations';
 
 const HeroSection = () => {
-
+    const { t } = useTranslation();
     const router = useRouter();
     const [location, setLocation] = useState<string>(LOCATIONS[3].name);
 
@@ -38,24 +38,24 @@ const HeroSection = () => {
                                 <path d="M12 6L4 10V14L12 18L20 14V10L12 6ZM12 8.5L17.5 11.25L12 14L6.5 11.25L12 8.5Z" fill="currentColor" />
                                 <circle cx="12" cy="12" r="2" fill="currentColor" className="animate-pulse" />
                             </svg>
-                            <span className="font-sans text-[11px] uppercase font-bold tracking-[0.2em] text-[var(--t-primary)] mix-blend-multiply opacity-90">badge</span>
+                            <span className="font-sans text-[11px] uppercase font-bold tracking-[0.2em] text-[var(--t-primary)] mix-blend-multiply opacity-90">{t('hero.badge')}</span>
                         </div>
                     </div>
 
                     <h1 className="text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-[var(--t-primary)]">
-                       Santuary <br />
-                        <span className="italic">classic</span> stays
+                        {t('hero.title')} <br />
+                        <span className="italic">{t('hero.italic')}</span> {t('hero.direct')}
                     </h1>
 
                     <p className="text-xl md:text-2xl text-[var(--t-primary)] opacity-80 font-light max-w-2xl leading-relaxed">
-                        enjoy stays
+                        {t('hero.description')}
                     </p>
 
                     <GlassPanel className="p-4 mt-8 max-w-3xl" hover={false}>
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                             <div className="px-4 py-2 border-b md:border-b-0 md:border-r border-[rgba(27,64,102,0.1)] w-full">
                                 <CustomSelect
-                                    label="Location"
+                                    label={t('hero.search.location')}
                                     value={location}
                                     onChange={(val) => setLocation(val)}
                                     className="w-full"
@@ -64,7 +64,7 @@ const HeroSection = () => {
                             </div>
 
                             <div className="px-4 py-2 border-b md:border-b-0 md:border-r border-[rgba(27,64,102,0.1)] relative">
-                                <label className="block font-sans text-[10px] uppercase tracking-wider text-[var(--t-secondary)] mb-0.5">Check In</label>
+                                <label className="block font-sans text-[10px] uppercase tracking-wider text-[var(--t-secondary)] mb-0.5">{t('hero.search.checkIn')}</label>
                                 <input
                                     type="date"
                                     value={checkIn}
@@ -75,7 +75,7 @@ const HeroSection = () => {
 
                             <div className="px-4 py-2 border-b md:border-b-0 md:border-r border-[rgba(27,64,102,0.1)] w-full">
                                 <CustomSelect
-                                    label="Guests"
+                                    label={t('hero.search.guests')}
                                     value={guests}
                                     onChange={(val) => setGuests(val)}
                                     className="w-full"
@@ -93,7 +93,7 @@ const HeroSection = () => {
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
-                        search
+                                {t('hero.search.button')}
                             </Button>
                         </div>
                     </GlassPanel>
@@ -109,7 +109,7 @@ const HeroSection = () => {
                                 sizes="(max-width: 768px) 100vw, 320px"
                                 className="object-cover hover:scale-105 transition-transform duration-700"
                             />
-                            <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-sans font-medium text-[var(--t-primary)] uppercase tracking-wide">kyoto</div>
+                            <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-sans font-medium text-[var(--t-primary)] uppercase tracking-wide">{t('hero.kyoto')}</div>
                         </div>
                     </GlassPanel>
 
@@ -122,7 +122,7 @@ const HeroSection = () => {
                                 sizes="(max-width: 768px) 100vw, 288px"
                                 className="object-cover hover:scale-105 transition-transform duration-700"
                             />
-                            <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-sans font-medium text-[var(--t-primary)] uppercase tracking-wide">malibu</div>
+                            <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-sans font-medium text-[var(--t-primary)] uppercase tracking-wide">{t('hero.malibu')}</div>
                         </div>
                     </GlassPanel>
 

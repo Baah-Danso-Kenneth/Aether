@@ -1,12 +1,11 @@
 import React from 'react';
-
+import Navbar from '../../components/layout/Navbar';
+import Footer from '../../components/layout/Footer';
 import HeroSection from '../../components/about/HeroSection';
 import MissionSection from '../../components/about/MissionSection';
 import ArchitectureSection from '../../components/about/ArchitectureSection';
 import ValuesSection from '../../components/about/ValuesSection';
 import InquireSection from '../../components/about/InquireSection';
-import Navbar from '@/components/layouts/Navbar';
-import Footer from '@/components/layouts/Footer';
 
 export default function AboutPage() {
     return (

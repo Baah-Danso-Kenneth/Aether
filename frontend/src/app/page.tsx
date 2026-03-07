@@ -1,20 +1,22 @@
-import HeroSection from '@/components/home/HeroSection'
-import PhilosophySection from '@/components/home/PhilosophySection'
-import VibeSection from '@/components/home/VibeSection'
-import Footer from '@/components/layouts/Footer'
-import Navbar from '@/components/layouts/Navbar'
-import React from 'react'
+import React from 'react';
+import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
+import HeroSection from '../components/home/HeroSection';
+import TrendingSection from '../components/home/TrendingSection';
+import PhilosophySection from '../components/home/PhilosophySection';
+import VibeSection from '../components/home/VibeSection';
+import FloatingChat from '../components/ui/FloatingChat';
 
-function page() {
+export default function Home() {
   return (
-    <main className='min-h-screen'>
-      <Navbar/>
-      <HeroSection/>
-      <PhilosophySection/>
-      <VibeSection/>
-      <Footer/>
+    <main className="min-h-screen">
+      <Navbar />
+      <HeroSection />
+      <TrendingSection />
+      <PhilosophySection />
+      <VibeSection />
+      <FloatingChat />
+      <Footer />
     </main>
-  )
+  );
 }
-
-export default page

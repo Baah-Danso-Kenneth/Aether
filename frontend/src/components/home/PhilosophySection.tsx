@@ -4,11 +4,11 @@ import Image from 'next/image';
 import GlassPanel from '../ui/GlassPanel';
 import Button from '../ui/Button';
 import Link from 'next/link';
-
+import { useTranslation } from '@/hooks/useTranslation';
 
 
 const PhilosophySection = () => {
-  
+    const { t } = useTranslation();
     return (
         <section className="py-24 bg-white/20 backdrop-blur-sm border-y border-white/40">
             <div className="max-w-[1280px] mx-auto px-6">
@@ -38,8 +38,8 @@ const PhilosophySection = () => {
                                     </svg>
                                 </div>
                                 <div className="pr-2">
-                                    <div className="font-sans text-[0.6rem] uppercase text-[var(--t-secondary)] tracking-[0.25em] font-bold mb-1 opacity-60">verification</div>
-                                    <div className="font-serif text-lg text-[var(--t-primary)] leading-none font-medium">blockchainSecured</div>
+                                    <div className="font-sans text-[0.6rem] uppercase text-[var(--t-secondary)] tracking-[0.25em] font-bold mb-1 opacity-60">{t('philosophy.verification')}</div>
+                                    <div className="font-serif text-lg text-[var(--t-primary)] leading-none font-medium">{t('philosophy.blockchainSecured')}</div>
                                 </div>
                             </GlassPanel>
                         </div>
@@ -49,10 +49,10 @@ const PhilosophySection = () => {
                     </div>
 
                     <div className="pt-2">
-                        <h2 className="font-sans text-[0.65rem] uppercase tracking-[0.3em] text-[var(--t-secondary)] mb-6 font-bold">vision</h2>
-                        <h3 className="text-5xl md:text-6xl font-light text-[var(--t-primary)] mb-8 leading-[1.1] font-serif">title</h3>
+                        <h2 className="font-sans text-[0.65rem] uppercase tracking-[0.3em] text-[var(--t-secondary)] mb-6 font-bold">{t('philosophy.vision')}</h2>
+                        <h3 className="text-5xl md:text-6xl font-light text-[var(--t-primary)] mb-8 leading-[1.1] font-serif">{t('philosophy.title')}</h3>
                         <p className="text-xl text-[var(--t-primary)] opacity-70 mb-10 font-serif leading-relaxed max-w-xl">
-                            description
+                            {t('philosophy.description')}
                         </p>
 
                         <div className="space-y-8 max-w-lg">
@@ -63,8 +63,8 @@ const PhilosophySection = () => {
                                     </svg>
                                 </div>
                                 <div>
-                                    <h4 className="text-2xl font-serif font-normal mb-2 text-[var(--t-primary)]">title'</h4>
-                                    <p className="text-sm text-[var(--t-secondary)] leading-relaxed opacity-80">desc</p>
+                                    <h4 className="text-2xl font-serif font-normal mb-2 text-[var(--t-primary)]">{t('philosophy.p2p.title')}</h4>
+                                    <p className="text-sm text-[var(--t-secondary)] leading-relaxed opacity-80">{t('philosophy.p2p.desc')}</p>
                                 </div>
                             </div>
 
@@ -76,15 +76,15 @@ const PhilosophySection = () => {
                                     </svg>
                                 </div>
                                 <div>
-                                    <h4 className="text-2xl font-serif font-normal mb-2 text-[var(--t-primary)]">title</h4>
-                                    <p className="text-sm text-[var(--t-secondary)] leading-relaxed opacity-80">desc</p>
+                                    <h4 className="text-2xl font-serif font-normal mb-2 text-[var(--t-primary)]">{t('philosophy.security.title')}</h4>
+                                    <p className="text-sm text-[var(--t-secondary)] leading-relaxed opacity-80">{t('philosophy.security.desc')}</p>
                                 </div>
                             </div>
                         </div>
 
                         <Link href="/manifesto">
                             <Button className="mt-12 px-10 py-4 text-xs tracking-widest uppercase font-bold bg-[var(--c-blue-deep)] hover:bg-[var(--c-blue-azure)] transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
-                                manifesto
+                                {t('philosophy.manifesto')}
                             </Button>
                         </Link>
 

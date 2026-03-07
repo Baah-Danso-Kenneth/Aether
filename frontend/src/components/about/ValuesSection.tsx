@@ -2,27 +2,29 @@
 import React from 'react';
 import GlassPanel from '../ui/GlassPanel';
 import Image from 'next/image';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const ValuesSection = () => {
+    const { t } = useTranslation();
     return (
         <section className="max-w-[1100px] mx-auto px-6 mb-32 grid grid-cols-1 md:grid-cols-2 gap-16">
             <div>
-                <h2 className="font-sans text-xs uppercase tracking-[0.2em] text-[var(--t-secondary)] mb-8">Values</h2>
+                <h2 className="font-sans text-xs uppercase tracking-[0.2em] text-[var(--t-secondary)] mb-8">{t('about.values.title')}</h2>
                 <ul className="space-y-12">
                     <li className="border-b border-[rgba(27,64,102,0.1)] pb-8">
                         <span className="font-sans text-xs text-[var(--t-secondary)] mb-2 block">01</span>
-                        <h4 className="text-2xl font-normal mb-3 text-[var(--t-primary)] font-serif">Integrity</h4>
-                        <p className="text-[var(--t-primary)] font-medium font-sans">We believe in transparency and honesty in all dealings</p>
+                        <h4 className="text-2xl font-normal mb-3 text-[var(--t-primary)] font-serif">{t('about.values.value1.title')}</h4>
+                        <p className="text-[var(--t-primary)] font-medium font-sans">{t('about.values.value1.desc')}</p>
                     </li>
                     <li className="border-b border-[rgba(27,64,102,0.1)] pb-8">
                         <span className="font-sans text-xs text-[var(--t-secondary)] mb-2 block">02</span>
-                        <h4 className="text-2xl font-normal mb-3 text-[var(--t-primary)] font-serif">Community</h4>
-                        <p className="text-[var(--t-primary)] font-medium font-sans">Building strong connections between people and places</p>
+                        <h4 className="text-2xl font-normal mb-3 text-[var(--t-primary)] font-serif">{t('about.values.value2.title')}</h4>
+                        <p className="text-[var(--t-primary)] font-medium font-sans">{t('about.values.value2.desc')}</p>
                     </li>
                     <li className="border-b border-[rgba(27,64,102,0.1)] pb-8">
                         <span className="font-sans text-xs text-[var(--t-secondary)] mb-2 block">03</span>
-                        <h4 className="text-2xl font-normal mb-3 text-[var(--t-primary)] font-serif">Excellence</h4>
-                        <p className="text-[var(--t-primary)] font-medium font-sans">Striving for the highest quality in everything we do</p>
+                        <h4 className="text-2xl font-normal mb-3 text-[var(--t-primary)] font-serif">{t('about.values.value3.title')}</h4>
+                        <p className="text-[var(--t-primary)] font-medium font-sans">{t('about.values.value3.desc')}</p>
                     </li>
                 </ul>
             </div>
@@ -38,7 +40,7 @@ const ValuesSection = () => {
                             />
                         </div>
                         <div className="mt-4 px-4 pb-4">
-                            <p className="font-sans text-xs uppercase tracking-widest text-[var(--t-primary)] italic font-semibold">Philosophy</p>
+                            <p className="font-sans text-xs uppercase tracking-widest text-[var(--t-primary)] italic font-semibold">{t('about.values.philosophy')}</p>
                         </div>
                     </GlassPanel>
                 </div>
