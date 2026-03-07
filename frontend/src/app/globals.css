@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  /* Aether Color Palette */
   --c-cream: #F5F3EB;
   --c-fog: #DCE4E8;
   --c-blue-haze: #9FBAD1;

@@ -2,6 +2,16 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 
+import AuthProvider from "@/components/providers/AuthProvider";
+import StoreProvider from "@/redux/StoreProvider";
+import ScrollToTop from "@/components/ui/ScrollToTop";
+import TxPollerMount from "@/components/providers/TxPollerMount";
+import GlobalTxToast from "@/components/ui/GlobalTxToast";
+import PremiumDialog from "@/components/ui/PremiumDialog";
+import FloatingChat from "@/components/ui/FloatingChat";
+import ReservationChatSidebar from "@/components/ui/ReservationChatSidebar";
+import FavoritesMount from "@/components/providers/FavoritesMount";
+
 const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
   variable: "--font-serif",
@@ -33,7 +43,18 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className={`${cormorantGaramond.variable} ${inter.variable} font-serif antialiased`}>
+        <StoreProvider>
+          <AuthProvider>
+            <TxPollerMount />
+            <GlobalTxToast />
+            <PremiumDialog />
+            <FavoritesMount />
+            <FloatingChat />
+            <ReservationChatSidebar />
             {children}
+            <ScrollToTop />
+          </AuthProvider>
+        </StoreProvider>
       </body>
     </html>
   );

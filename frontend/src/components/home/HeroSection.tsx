@@ -5,9 +5,10 @@ import GlassPanel from '../ui/GlassPanel';
 import Button from '../ui/Button';
 import CustomSelect from '../ui/CustomSelect';
 import { useTranslation } from '@/hooks/useTranslation';
-import { LOCATIONS } from '@/constants/locations';
+
 
 import { useRouter } from 'next/navigation';
+import { LOCATIONS } from '../constants/locations';
 
 const HeroSection = () => {
     const { t } = useTranslation();

@@ -2,8 +2,8 @@
 import React from 'react';
 import VibeCard from '../ui/VibeCard';
 import { useTranslation } from '@/hooks/useTranslation';
+import { VIBES } from '../constants/vibes';
 
-import { VIBES } from '@/constants/vibes';
 
 const VibeSection = () => {
     const { t } = useTranslation();
