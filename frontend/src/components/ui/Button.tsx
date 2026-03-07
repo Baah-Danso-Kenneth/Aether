@@ -27,4 +27,3 @@ const Button: React.FC<ButtonProps> = ({ children, onClick, variant = 'primary',
 };
 
 export default Button;
-

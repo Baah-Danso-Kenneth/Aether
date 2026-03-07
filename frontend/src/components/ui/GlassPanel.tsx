@@ -30,4 +30,3 @@ const GlassPanel: React.FC<GlassPanelProps> = ({ children, className = '', hover
 };
 
 export default GlassPanel;
-
