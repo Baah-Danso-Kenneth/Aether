@@ -1,12 +1,17 @@
 'use client';
-import { FormData } from '@/types/wizard.types';
 import { LOCATIONS } from '@/constants/locations';
 import { VIBES } from '@/constants/vibes';
 import { Home, Sparkles, MapPin, AlignLeft, ChevronDown } from 'lucide-react';
 
 interface DetailsStepProps {
-    formData: FormData;
-    setFormData: (data: FormData) => void;
+    formData: {
+        propertyName: string;
+        type: string;
+        location: string;
+        categoryTag: number;
+        description: string;
+    };
+    setFormData: (data: any) => void;
 }
 
 const DetailsStep: React.FC<DetailsStepProps> = ({ formData, setFormData }) => {
