@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import ProfileSidebar from '../../components/profile/ProfileSidebar';
 import UpcomingReservation from '../../components/profile/UpcomingReservation';
 import PastBookings from '../../components/profile/PastBookings';
@@ -8,24 +8,41 @@ import TravelPreferences from '../../components/profile/TravelPreferences';
 
 import { useSearchParams } from 'next/navigation';
 import { ChatInbox } from '../../components/chat/ChatInbox';
+import { GenerativeLoader } from '@/components/ui/GenerativeLoader';
 
-export default function ProfilePage() {
+function ProfileContent() {
     const searchParams = useSearchParams();
     const initialTab = searchParams.get('tab') || 'bookings';
     const [activeTab, setActiveTab] = useState(initialTab);
+    const [isTabLoading, setIsTabLoading] = useState(false);
+
+    const handleTabChange = (tab: string) => {
+        if (tab === 'messages' && activeTab !== 'messages') {
+            setIsTabLoading(true);
+        }
+        setActiveTab(tab);
+    };
 
     // Sync state if URL changes
     useEffect(() => {
         const tab = searchParams.get('tab');
         if (tab && tab !== activeTab) {
-            setActiveTab(tab);
+            handleTabChange(tab);
         }
     }, [searchParams, activeTab]);
 
     return (
         <div className="flex h-screen overflow-hidden bg-[var(--c-cream)] text-[var(--t-primary)] font-serif">
-            <div className="w-[360px] flex-shrink-0 h-full">
-                <ProfileSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+            {isTabLoading && (
+                <GenerativeLoader
+                    duration={2000}
+                    messages={["Decrypting neural link...", "Retrieving transmission history...", "Establishing secure channel..."]}
+                    completeMessage="Secure Channel Ready"
+                    onComplete={() => setIsTabLoading(false)}
+                />
+            )}
+            <div className="flex-shrink-0 h-full transition-all duration-300">
+                <ProfileSidebar activeTab={activeTab} setActiveTab={handleTabChange} />
             </div>
 
             <main className="flex-1 h-full overflow-y-auto p-12 lg:px-16 scroll-hide">
@@ -65,4 +82,30 @@ export default function ProfilePage() {
             </main>
         </div>
     );
-};
+}
+
+export default function ProfilePage() {
+    const [isInitialLoading, setIsInitialLoading] = React.useState(true);
+
+    return (
+        <>
+            {isInitialLoading && (
+                <GenerativeLoader
+                    duration={2000}
+                    messages={["Accessing vault...", "Fetching identity...", "Syncing collectibles..."]}
+                    completeMessage="Identity Verified"
+                    onComplete={() => setIsInitialLoading(false)}
+                />
+            )}
+            <Suspense fallback={
+                <GenerativeLoader
+                    duration={1500}
+                    messages={["Connecting..."]}
+                    completeMessage="Ready"
+                />
+            }>
+                <ProfileContent />
+            </Suspense>
+        </>
+    );
+}

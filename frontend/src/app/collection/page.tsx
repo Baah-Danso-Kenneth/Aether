@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, Suspense } from 'react';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import FilterBar from '../../components/collection/FilterBar';
@@ -13,8 +13,10 @@ import { LOCATIONS } from '@/constants/locations';
 
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux';
+import { GenerativeLoader } from '@/components/ui/GenerativeLoader';
+import { LayoutGrid, List } from 'lucide-react';
 
-export default function CollectionPage() {
+function CollectionContent() {
     const { properties, fetchProperties, isLoading } = useProperties();
     const searchParams = useSearchParams();
     const initialVibe = searchParams.get('vibe');
@@ -25,6 +27,7 @@ export default function CollectionPage() {
     const [priceRange, setPriceRange] = useState('any');
     const [sortBy, setSortBy] = useState('Newest');
     const [activeFilter, setActiveFilter] = useState('All Stays');
+    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
     // Set initial filter from query param
     useEffect(() => {
@@ -43,6 +46,11 @@ export default function CollectionPage() {
     const filteredProperties = useMemo(() => {
         let result = [...properties];
 
+        //- [x] Integrate into `ManifestoPage`
+        // [/] Integrate into `PropertyDetailsPage`
+        // [ ] Integrate into `DashboardPage`
+        // [ ] Integrate into `ProfilePage`
+        // [x] Verify implementation
         // 1. Filter by Location
         if (location !== 'all') {
             result = result.filter(p => p.locationTag.toString() === location);
@@ -91,10 +99,8 @@ export default function CollectionPage() {
     }, [properties, location, priceRange, sortBy, activeFilter, query]);
 
     return (
-        <main className="min-h-screen">
-            <Navbar />
-
-            <div className="pt-32 pb-24 px-8 max-w-[1440px] mx-auto">
+        <div className="pt-32 pb-24 px-8 max-w-[1440px] mx-auto">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
                 <FilterBar
                     location={location}
                     setLocation={setLocation}
@@ -106,45 +112,83 @@ export default function CollectionPage() {
                     setActiveFilter={setActiveFilter}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    {isLoading && properties.length === 0 ? (
-                        Array(6).fill(0).map((_, i) => (
-                            <ListingCardSkeleton key={i} />
-                        ))
-                    ) : filteredProperties.length === 0 ? (
-                        <div className="col-span-full">
-                            <EmptyState
-                                title="No Sanctuaries Matched"
-                                description="We couldn't find any sanctuaries matching your current search criteria. Try adjusting your filters to explore more possibilities."
-                                action={{
-                                    label: "Clear All Filters",
-                                    onClick: () => { setLocation('all'); setPriceRange('any'); setActiveFilter('All Stays'); }
-                                }}
-                            />
-                        </div>
-                    ) : (
-                        filteredProperties.map((property) => (
-                            <PropertyCard
-                                key={property.id}
-                                id={property.id}
-                                metadataUri={property.metadataUri}
-                                price={`${(property.pricePerNight / 1000000).toFixed(2)} STX`}
-                                badge={property.id < 0 ? 'Pending' : undefined}
-                            />
-                        ))
-                    )}
+                <div className="flex bg-white/40 backdrop-blur-sm p-1 rounded-full border border-white/20 shadow-sm self-end md:self-auto">
+                    <button
+                        onClick={() => setViewMode('grid')}
+                        className={`p-2.5 rounded-full transition-all duration-300 ${viewMode === 'grid' ? 'bg-[var(--c-blue-deep)] text-white shadow-md' : 'text-[var(--t-secondary)] hover:bg-white/40'}`}
+                        title="Grid View"
+                    >
+                        <LayoutGrid size={18} />
+                    </button>
+                    <button
+                        onClick={() => setViewMode('list')}
+                        className={`p-2.5 rounded-full transition-all duration-300 ${viewMode === 'list' ? 'bg-[var(--c-blue-deep)] text-white shadow-md' : 'text-[var(--t-secondary)] hover:bg-white/40'}`}
+                        title="List View"
+                    >
+                        <List size={18} />
+                    </button>
                 </div>
+            </div>
 
-                {!isLoading && filteredProperties.length > 0 && (
-                    <div className="mt-20 flex justify-center items-center gap-4">
-                        <div className="flex gap-2 font-sans text-xs font-bold uppercase tracking-[0.2em]">
-                            <button className="w-10 h-10 rounded-full bg-[var(--t-primary)] text-white flex items-center justify-center shadow-lg">1</button>
-                            <span className="flex items-center px-2 text-[var(--t-secondary)] opacity-60">Verified Ledger</span>
-                        </div>
+            <div className={viewMode === 'grid' ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" : "flex flex-col gap-6"}>
+                {isLoading && properties.length === 0 ? (
+                    Array(6).fill(0).map((_, i) => (
+                        <ListingCardSkeleton key={i} layout={viewMode} />
+                    ))
+                ) : filteredProperties.length === 0 ? (
+                    <div className="col-span-full">
+                        <EmptyState
+                            title="No Sanctuaries Matched"
+                            description="We couldn't find any sanctuaries matching your current search criteria. Try adjusting your filters to explore more possibilities."
+                            action={{
+                                label: "Clear All Filters",
+                                onClick: () => { setLocation('all'); setPriceRange('any'); setActiveFilter('All Stays'); }
+                            }}
+                        />
                     </div>
+                ) : (
+                    filteredProperties.map((property) => (
+                        <PropertyCard
+                            key={property.id}
+                            id={property.id}
+                            metadataUri={property.metadataUri}
+                            price={`${(property.pricePerNight / 1000000).toFixed(2)} STX`}
+                            badge={property.id < 0 ? 'Pending' : undefined}
+                            layout={viewMode}
+                        />
+                    ))
                 )}
             </div>
 
+            {!isLoading && filteredProperties.length > 0 && (
+                <div className="mt-20 flex justify-center items-center gap-4">
+                    <div className="flex gap-2 font-sans text-xs font-bold uppercase tracking-[0.2em]">
+                        <button className="w-10 h-10 rounded-full bg-[var(--t-primary)] text-white flex items-center justify-center shadow-lg">1</button>
+                        <span className="flex items-center px-2 text-[var(--t-secondary)] opacity-60">Verified Ledger</span>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default function CollectionPage() {
+    const [isInitialLoading, setIsInitialLoading] = React.useState(true);
+
+    return (
+        <main className="min-h-screen">
+            {isInitialLoading && (
+                <GenerativeLoader
+                    duration={2500}
+                    messages={["Syncing ledger...", "Fetching sanctuaries...", "Vibe discovery..."]}
+                    completeMessage="Collection Ready"
+                    onComplete={() => setIsInitialLoading(false)}
+                />
+            )}
+            <Navbar />
+            <Suspense fallback={<div className="pt-32 pb-24 text-center font-serif text-[var(--t-secondary)]">Loading collection...</div>}>
+                <CollectionContent />
+            </Suspense>
             <Footer />
         </main>
     );
