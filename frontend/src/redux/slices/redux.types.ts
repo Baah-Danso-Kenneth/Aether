@@ -117,6 +117,11 @@ export interface DashboardSidebarProps {
     totalEarned?: number;
 }
 
+export interface NavDockProps {
+    activeItem: string;
+    setActiveItem: (id: string) => void;
+}
+
 export interface DashboardStatsProps {
     persona: Persona;
     myProperties: any[];

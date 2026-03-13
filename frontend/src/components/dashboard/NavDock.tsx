@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { LayoutDashboard, Compass, User, MoreHorizontal, Home } from 'lucide-react';
+import { LayoutDashboard, Compass, User, MoreHorizontal } from 'lucide-react';
 import { NavDockProps } from '@/redux/slices/redux.types';
 
 
