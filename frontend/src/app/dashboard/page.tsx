@@ -22,8 +22,9 @@ export default function DashboardPage() {
         handleOpenReview, isReviewDialogOpen, setIsReviewDialogOpen,
         selectedBookingForReview, submitReview, markAsReviewed,
         propertiesLoading, bookingsLoading,
-        stats, badges, userReviews
+        stats, badges, userReviews, totalEarned
     } = useDashboard();
+    const { connectWallet } = useAuth();
 
     if (!userData) {
         return (
@@ -32,7 +33,7 @@ export default function DashboardPage() {
                     <h2 className="text-3xl font-light mb-6">Authorize Access</h2>
                     <p className="text-[var(--t-secondary)] mb-8 font-sans">Please connect your Stacks wallet to view your personalized dashboard.</p>
                     <button
-                        onClick={useAuth().connectWallet}
+                        onClick={connectWallet}
                         className="w-full py-4 rounded-xl bg-[var(--c-blue-deep)] text-white font-medium shadow-xl hover:bg-[#153250] transition-all"
                     >
                         Connect Wallet
@@ -107,7 +108,7 @@ export default function DashboardPage() {
                             persona={persona}
                             stats={stats}
                             badges={badges}
-                            totalEarned={myProperties.reduce((acc: number, p: any) => acc + (p.pricePerNight / 1_000_000), 0)}
+                            totalEarned={totalEarned}
                         />
                     </div>
                 </div>
