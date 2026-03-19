@@ -7,6 +7,7 @@ import ProfileImage from './ProfileImage';
 import ProfileAchievements from './ProfileAchievements';
 import ProfileNavigation from './ProfileNavigation';
 import { useProfileSidebar } from '@/hooks/useProfileSidebar';
+import { useToast } from '@/hooks/useToast';
 
 interface ProfileSidebarProps {
     activeTab: string;
@@ -20,6 +21,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ activeTab, setActiveTab
         badges, badgeTypes, profileImage, isUploading,
         fileInputRef, handleImageUpload, userName, shortAddress
     } = useProfileSidebar();
+    const { toast } = useToast();
 
     if (isLoading) {
         return (
@@ -52,8 +54,8 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ activeTab, setActiveTab
             </button>
 
             <Link href="/" className={`flex items-center gap-3 font-semibold text-xl tracking-tight text-white/90 ${isCollapsed ? 'justify-center' : ''}`}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8 flex-shrink-0">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 flex-shrink-0">
+                    <path d="M7 19a4 4 0 0 1-4-4 4 4 0 0 1 4-4 4 4 0 0 1 .1-1 7 7 0 0 1 13.8 0l.1 1a4 4 0 0 1 4 4 4 4 0 0 1-4 4H7z" />
                 </svg>
                 {!isCollapsed && <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>AETHER</motion.span>}
             </Link>
@@ -81,7 +83,10 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ activeTab, setActiveTab
                         <div className="flex items-center gap-3 mt-1 cursor-pointer group" title="Click to copy address" onClick={() => {
                             if (userAddress) {
                                 navigator.clipboard.writeText(userAddress);
-                                alert("Address copied to clipboard");
+                                toast({
+                                    title: "Protocol Link Copied",
+                                    description: "Address copied to clipboard",
+                                });
                             }
                         }}>
                             <div className={`flex items-center gap-2 px-3 py-1 rounded-full bg-black/20 border border-white/5 group-hover:bg-black/30 transition-all`}>

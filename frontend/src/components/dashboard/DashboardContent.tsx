@@ -6,13 +6,16 @@ import Skeleton from '../ui/Skeleton';
 import { getIPFSUrl } from '@/lib/ipfs';
 import { openContractCall } from '@stacks/connect';
 import { togglePropertyStatus } from '@/lib/escrow/write';
+import { userSession } from '@/lib/stacks';
 import Link from 'next/link';
 import { encodePropertyId } from '@/lib/urls';
 import RecentReviewsList from './RecentReviewsList';
 import type { Review } from '@/lib/reputation/types';
 import { DashboardContentProps } from '@/redux/slices/redux.types';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const DashboardContent: React.FC<DashboardContentProps> = ({ persona, myProperties, myTrips, isLoading, userReviews = [] }) => {
+    const { t } = useTranslation();
     const handleToggleStatus = async (propertyId: number) => {
         if (propertyId < 0) return;
 
@@ -21,6 +24,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ persona, myProperti
 
             await openContractCall({
                 ...txOptions,
+                userSession,
                 onFinish: (data: { txId: string }) => {
                     console.log("Toggle transaction broadcasted:", data.txId);
                 },
@@ -35,7 +39,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ persona, myProperti
         <div className="mt-4">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-normal text-[var(--t-primary)]">
-                    {persona === 'HOST' ? 'Your Managed Sanctuaries' : 'Your Recent Trips'}
+                    {persona === 'HOST' ? t('dashboard.hostTitle') : t('dashboard.guestTitle')}
                 </h2>
             </div>
 
@@ -53,10 +57,10 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ persona, myProperti
                 ) : persona === 'HOST' ? (
                     myProperties.length === 0 ? (
                         <EmptyState
-                            title="No Managed Sanctuaries"
-                            description="Your collection of curated properties on the blockchain is currently empty. List your first sanctuary to begin your journey as a host."
+                            title={t('emptyStates.noManagedSanctuaries.title')}
+                            description={t('emptyStates.noManagedSanctuaries.description')}
                             action={{
-                                label: "List a Property",
+                                label: t('emptyStates.noManagedSanctuaries.action'),
                                 onClick: () => { window.location.href = '/dashboard/list-property' }
                             }}
                         />
@@ -67,9 +71,9 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ persona, myProperti
                                     <PropertyItem
                                         key={`prop-${property.id}`}
                                         id={property.id}
-                                        name={property.id < 0 ? 'Pending Listing...' : (property.metadata?.title || `Sanctuary #${property.id}`)}
+                                        name={property.id < 0 ? t('dashboard.pendingListing') : (property.metadata?.title || `Sanctuary #${property.id}`)}
                                         location={property.owner.slice(0, 10) + '...'}
-                                        status={property.active ? 'Active' : 'Hidden'}
+                                        status={property.active ? t('dashboard.active') : t('dashboard.hidden')}
                                         isActive={property.active}
                                         image={(property.metadata?.images && property.metadata.images.length > 0) ? getIPFSUrl(property.metadata.images[0]) : (property.metadata?.image ? getIPFSUrl(property.metadata.image) : "#E0E0E0")}
                                         onToggle={() => handleToggleStatus(property.id)}
@@ -84,10 +88,10 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ persona, myProperti
                 ) : (
                     myTrips.length === 0 ? (
                         <EmptyState
-                            title="No Recent Trips"
-                            description="You haven't embarked on any journeys yet. Explore our curated collection of sanctuaries to find your next destination."
+                            title={t('emptyStates.noRecentTrips.title')}
+                            description={t('emptyStates.noRecentTrips.description')}
                             action={{
-                                label: "Explore Collection",
+                                label: t('emptyStates.noRecentTrips.action'),
                                 onClick: () => { window.location.href = '/collection' }
                             }}
                         />
@@ -97,10 +101,10 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ persona, myProperti
                                 <div className="bg-white/60 p-5 rounded-2xl border border-black/5 flex justify-between items-center group">
                                     <div>
                                         <div className="text-xs font-bold uppercase tracking-widest text-[var(--c-blue-azure)] mb-1">Sanctuary #{booking.propertyId}</div>
-                                        <div className="text-lg font-light group-hover:text-[var(--c-blue-azure)] transition-colors">Check-in Block: {booking.checkIn}</div>
+                                        <div className="text-lg font-light group-hover:text-[var(--c-blue-azure)] transition-colors">{t('dashboard.checkInBlock')} {booking.checkIn}</div>
                                     </div>
                                     <div className="text-right text-xs text-[var(--t-secondary)] uppercase font-bold tracking-tighter">
-                                        Status: {booking.status}
+                                        {t('dashboard.status')} {booking.status}
                                     </div>
                                 </div>
                             </Link>

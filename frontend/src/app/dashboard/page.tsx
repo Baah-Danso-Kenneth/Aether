@@ -82,6 +82,7 @@ export default function DashboardPage() {
                             isLoading={isLoading}
                             stats={stats}
                             badges={badges}
+                            totalEarned={totalEarned}
                         />
 
                         <DashboardContent

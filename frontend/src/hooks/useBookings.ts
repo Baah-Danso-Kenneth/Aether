@@ -10,6 +10,7 @@ import {
 } from '@/redux/slices/bookingsSlice';
 import { addPendingTx } from '@/redux/slices/pendingTxSlice';
 import { getUserBookings } from '@/lib/escrow';
+import { userSession } from '@/lib/stacks';
 import {
     bookProperty as bookPropertyTx,
     releasePayment as releasePaymentTx,
@@ -67,7 +68,7 @@ export function useBookings(userAddress?: string) {
             // Create post-condition to authorize the STX transfer
             const postCondition = Pc.principal(guestAddress).willSendEq(totalAmountMicroStacks).ustx();
 
-            const txOptions = await bookPropertyTx({
+            const txOptions = bookPropertyTx({
                 propertyId,
                 checkIn,
                 checkOut,
@@ -78,6 +79,7 @@ export function useBookings(userAddress?: string) {
 
             await openContractCall({
                 ...txOptions,
+                userSession,
                 postConditions: [postCondition],
                 onFinish: (data) => {
                     dispatch(addPendingTx({
@@ -121,9 +123,10 @@ export function useBookings(userAddress?: string) {
 
     const releasePayment = useCallback(async (bookingId: number) => {
         try {
-            const txOptions = await releasePaymentTx(bookingId);
+            const txOptions = releasePaymentTx(bookingId);
             await openContractCall({
                 ...txOptions,
+                userSession,
                 onFinish: (data) => {
                     dispatch(addPendingTx({
                         txId: data.txId,
@@ -147,9 +150,10 @@ export function useBookings(userAddress?: string) {
 
     const cancelBooking = useCallback(async (bookingId: number) => {
         try {
-            const txOptions = await cancelBookingTx(bookingId);
+            const txOptions = cancelBookingTx(bookingId);
             await openContractCall({
                 ...txOptions,
+                userSession,
                 onFinish: (data) => {
                     dispatch(addPendingTx({
                         txId: data.txId,

@@ -2,9 +2,10 @@ import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux';
 import { addPendingTx } from '@/redux/slices/pendingTxSlice';
-import { setReputationStats, setReputationReviews } from '@/redux/slices/reputationSlice';
-import { submitReview as submitReviewTx, getUserStats, hasReviewed, getReviewsByUser } from '@/lib/reputation';
+import { setReputationStats, setReceivedReviews, setWrittenReviews } from '@/redux/slices/reputationSlice';
+import { submitReview as submitReviewTx, getUserStats, hasReviewed, getReviewsByUser, getUserReviews } from '@/lib/reputation';
 import { openContractCall } from '@stacks/connect';
+import { userSession } from '@/lib/stacks';
 import { useToast } from './useToast';
 
 export function useReputation(userAddress?: string) {
@@ -13,7 +14,8 @@ export function useReputation(userAddress?: string) {
     const [isLoading, setIsLoading] = useState(false);
 
     const allStats = useSelector((state: RootState) => state.reputation.stats);
-    const allReviews = useSelector((state: RootState) => state.reputation.reviews);
+    const receivedReviews = useSelector((state: RootState) => state.reputation.receivedReviews);
+    const writtenReviews = useSelector((state: RootState) => state.reputation.writtenReviews);
     const lastFetched = useSelector((state: RootState) => state.reputation.lastFetched);
 
     const submitReview = useCallback(async (
@@ -32,6 +34,7 @@ export function useReputation(userAddress?: string) {
 
             await openContractCall({
                 ...txOptions,
+                userSession,
                 onFinish: (data) => {
                     dispatch(addPendingTx({
                         txId: data.txId,
@@ -75,12 +78,25 @@ export function useReputation(userAddress?: string) {
         return await hasReviewed(bookingId, reviewer);
     }, []);
 
-    const fetchUserReviews = useCallback(async (address: string) => {
+    const fetchWrittenReviews = useCallback(async (address: string) => {
         setIsLoading(true);
         try {
             const reviews = await getReviewsByUser(address);
             if (reviews) {
-                dispatch(setReputationReviews({ address, reviews }));
+                dispatch(setWrittenReviews({ address, reviews }));
+            }
+            return reviews;
+        } finally {
+            setIsLoading(false);
+        }
+    }, [dispatch]);
+
+    const fetchReceivedReviews = useCallback(async (address: string) => {
+        setIsLoading(true);
+        try {
+            const reviews = await getUserReviews(address);
+            if (reviews) {
+                dispatch(setReceivedReviews({ address, reviews }));
             }
             return reviews;
         } finally {
@@ -91,10 +107,12 @@ export function useReputation(userAddress?: string) {
     return {
         submitReview,
         fetchUserStats,
-        fetchUserReviews,
+        fetchWrittenReviews,
+        fetchReceivedReviews,
         checkBookingReviewed,
-        reputationStats: userAddress ? allStats[userAddress] : null,
-        userReviews: userAddress ? (allReviews[userAddress] || []) : [],
+        stats: userAddress ? allStats[userAddress] : null,
+        receivedReviews: userAddress ? (receivedReviews[userAddress] || []) : [],
+        writtenReviews: userAddress ? (writtenReviews[userAddress] || []) : [],
         isLoading
     };
 }
