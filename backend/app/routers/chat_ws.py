@@ -31,6 +31,11 @@ class ConnectionManager:
             for connection in self.active_connections[booking_id]:
                 await connection.send_json(message)
 
+    async def broadcast_text(self, booking_id: int, message: str):
+        if booking_id in self.active_connections:
+            for connection in self.active_connections[booking_id]:
+                await connection.send_text(message)
+
 manager = ConnectionManager()
 
 @router.websocket("/{booking_id}/{user_address}/{partner_address}")
@@ -100,6 +105,16 @@ async def websocket_endpoint(
     try:
         while True:
             data = await websocket.receive_text()
+
+            # Ignore keepalive pings from the client
+            if data == '__ping__':
+                continue
+
+            # Broadcast typing signal to partner — don't save to DB
+            if data == '__typing__':
+                await manager.broadcast_text(room_id, '__typing__')
+                continue
+
             print(f"[WS] Received message from {user_address[:8]}: {data[:20]}...")
             
             # Save message
