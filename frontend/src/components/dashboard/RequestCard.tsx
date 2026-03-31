@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldAlert, CreditCard, Clock, CheckCircle2, Check, X, Send, Sparkles } from 'lucide-react';
+import { ShieldAlert, CreditCard, Clock, CheckCircle2, Check, X, Send, Sparkles, Loader2 } from 'lucide-react';
 import { RequestCardProps } from '@/redux/slices/redux.types';
 import Identicon from '../ui/Identicon';
 import { CurrencyDisplay } from '../ui/CurrencyDisplay';
@@ -16,8 +16,13 @@ const RequestCard: React.FC<RequestCardProps> = ({
     onRelease,
     onDispute,
     onResolveDispute,
-    onReview
+    onReview,
+    currentBlockHeight,
+    checkInBlock,
+    isReleasing
 }) => {
+    const isWaiting = Boolean(currentBlockHeight && checkInBlock && currentBlockHeight < checkInBlock);
+    const isDisabled = isWaiting || isReleasing;
     const isActionable = type === 'booking' || type === 'action_required' || type === 'completed';
 
     return (
@@ -98,10 +103,20 @@ const RequestCard: React.FC<RequestCardProps> = ({
                         {onRelease && (
                             <div className="flex gap-2">
                                 <button
-                                    className="flex-[2] h-10 rounded-full bg-[var(--c-blue-azure)] text-white text-[10px] font-bold uppercase tracking-wider shadow-lg shadow-blue-500/10 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
-                                    onClick={onRelease}
+                                    className={`flex-[2] h-10 rounded-full text-white text-[10px] font-bold uppercase tracking-wider shadow-lg transition-all flex items-center justify-center gap-2
+                                        ${isDisabled
+                                            ? 'bg-gray-400 cursor-not-allowed opacity-60'
+                                            : 'bg-[var(--c-blue-azure)] shadow-blue-500/10 hover:-translate-y-0.5'}`}
+                                    onClick={isDisabled ? undefined : onRelease}
+                                    disabled={isDisabled}
                                 >
-                                    <CreditCard className="w-3 h-3" /> Release Payment
+                                    {isReleasing ? (
+                                        <><Loader2 className="w-3 h-3 animate-spin" /> Releasing...</>
+                                    ) : isWaiting ? (
+                                        <><Clock className="w-3 h-3 animate-pulse" /> Waiting for Block {checkInBlock}</>
+                                    ) : (
+                                        <><CreditCard className="w-3 h-3" /> Release Payment</>
+                                    )}
                                 </button>
                                 {onDispute && (
                                     <button
